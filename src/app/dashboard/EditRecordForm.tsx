@@ -80,7 +80,7 @@ export default function EditRecordForm({ record, onClose, onUpdate }: Props) {
     if (image) {
       const formData = new FormData();
       formData.append("file", image);
-      const uploadRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/upload`, {
+      const uploadRes = await fetch(`https://cemeteryapi.onrender.com/api/upload`, {
         method: "POST",
         body: formData,
       });
@@ -89,7 +89,7 @@ export default function EditRecordForm({ record, onClose, onUpdate }: Props) {
     }
 
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/cemetery/${record._id}`,
+      `https://cemeteryapi.onrender.com/api/cemetery/${record._id}`,
       {
         method: "PUT",
         headers: {

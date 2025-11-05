@@ -53,7 +53,7 @@ const NoticeForm: React.FC<NoticeFormProps> = ({ notice, onUpdate }) => {
 
       // If notice exists → update
       if (notice) {
-        await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/api/notices/${notice._id}`, {
+        await axios.put(`https://cemeteryapi.onrender.com/api/notices/${notice._id}`, {
           title,
           description,
           date,
@@ -63,7 +63,7 @@ const NoticeForm: React.FC<NoticeFormProps> = ({ notice, onUpdate }) => {
         setMessage("Notice/Event updated successfully!");
       } else {
         // Create new notice
-        await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/notices`, {
+        await axios.post(`https://cemeteryapi.onrender.com/api/notices`, {
           title,
           description,
           date,

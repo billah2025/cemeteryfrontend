@@ -42,7 +42,8 @@ export default function EditRecordForm({ record, onClose, onUpdate }: Props) {
   const [gender, setGender] = useState("");
   const [whereDied, setWhereDied] = useState("");
   const [description, setDescription] = useState("");
-
+  const [unusedGraves, setUnusedGraves] = useState<string[]>([]);
+  const [loadingGraves, setLoadingGraves] = useState(true);
   useEffect(() => {
     if (record) {
       setName(record.name);
@@ -59,8 +60,40 @@ export default function EditRecordForm({ record, onClose, onUpdate }: Props) {
       setGender(record.gender || "");
       setWhereDied(record.whereDied || "");
       setDescription(record.description || "");
+      
     }
   }, [record]);
+
+
+  useEffect(() => {
+  const fetchUnusedGraves = async () => {
+    try {
+      // 1️⃣ Fetch all possible grave numbers
+      const allRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/graves`, {
+        headers: { "x-api-key": process.env.NEXT_PUBLIC_API_KEY! },
+      });
+      const allGraves: string[] = await allRes.json();
+
+      // 2️⃣ Fetch all used graves
+      const usedRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cemetery`, {
+        headers: { "x-api-key": process.env.NEXT_PUBLIC_API_KEY! },
+      });
+      const usedData = await usedRes.json();
+      const usedGraves = usedData.map((r: any) => r.graveNumber);
+
+      // 3️⃣ Filter unused
+      const available = allGraves.filter((g) => !usedGraves.includes(g));
+      setUnusedGraves(available);
+    } catch (err) {
+      console.error("Failed to fetch grave numbers", err);
+    } finally {
+      setLoadingGraves(false);
+    }
+  };
+
+  fetchUnusedGraves();
+}, []);
+
 
   if (!record) return null;
 
@@ -214,14 +247,22 @@ export default function EditRecordForm({ record, onClose, onUpdate }: Props) {
               className="w-full h-32 object-cover rounded"
             />
           )}
-          <input
-            type="text"
-            placeholder="Grave Number"
+          <select
             value={graveNumber}
             onChange={(e) => setGraveNumber(e.target.value)}
             className="w-full p-2 border rounded"
             required
-          />
+          >
+            <option value="">Select Grave Number</option>
+            {unusedGraves
+              .concat([record.graveNumber]) // include current grave
+              .map((num) => (
+                <option key={num} value={num}>
+                  {num}
+                </option>
+              ))}
+          </select>
+
           <select
             value={gender}
             onChange={(e) => setGender(e.target.value)}

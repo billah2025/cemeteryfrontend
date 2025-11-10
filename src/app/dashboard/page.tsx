@@ -60,7 +60,7 @@ export default function DashboardPage() {
   // Fetch all notices/events
   const fetchNotices = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cemetery`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/notices`, {
           headers: {
             "x-api-key": process.env.NEXT_PUBLIC_API_KEY!,
           },
@@ -87,9 +87,12 @@ export default function DashboardPage() {
     if (!confirm("Are you sure you want to delete this record?")) return;
 
     try {
-      const res = await fetch(`https://cemeteryapi.onrender.com/api/cemetery/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cemetery/${id}`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}` ,
+        
+        "x-api-key": process.env.NEXT_PUBLIC_API_KEY!
+      },
       });
       if (res.ok) {
         fetchRecords();
@@ -108,6 +111,9 @@ export default function DashboardPage() {
     try {
       const res = await fetch(`https://cemeteryapi.onrender.com/api/notices/${id}`, {
         method: "DELETE",
+        headers: {  
+        "x-api-key": process.env.NEXT_PUBLIC_API_KEY!
+      },
       });
       if (res.ok) fetchNotices();
       else alert("Failed to delete notice/event");

@@ -32,7 +32,7 @@ export default function AddRecordForm({ onAdd, onClose }: Props) {
     const fetchUnusedGraves = async () => {
       try {
         // 1️⃣ Fetch all possible grave numbers (or load from file/backend)
-        const allGravesRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cemetery`, {
+        const allGravesRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/graves`, {
           headers: {
             "x-api-key": process.env.NEXT_PUBLIC_API_KEY!,
           },
@@ -90,6 +90,7 @@ export default function AddRecordForm({ onAdd, onClose }: Props) {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
+        "x-api-key": process.env.NEXT_PUBLIC_API_KEY!,
       },
       body: JSON.stringify({
         name,

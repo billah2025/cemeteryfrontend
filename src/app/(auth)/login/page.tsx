@@ -16,7 +16,9 @@ export default function LoginPage() {
     try {
       const res = await fetch(`https://cemeteryapi.onrender.com/api/auth/login`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" ,
+          "x-api-key": process.env.NEXT_PUBLIC_API_KEY!,
+        },
         body: JSON.stringify({ email, password }),
       });
 
